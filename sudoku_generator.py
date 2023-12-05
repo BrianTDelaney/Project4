@@ -1,4 +1,4 @@
-# Structure and ideas came from https://github.com/zhoulisha/Sudoku-Project
+# Structure and ideas came from https://github.com/zhoulisha/Sudoku-Project and python library
 
 import math, random
 
@@ -49,7 +49,7 @@ class SudokuGenerator:
     return True
 
   def fill_box(self, row_start, col_start): # Fills the specified 3x3 box with values by generating a random digit which has not been used in the box
-    nums = [int(i + 1) for i in range(self.row_length)]  # Convert numbers to strings
+    nums = [int(i + 1) for i in range(self.row_length)]
     nums = random.sample(nums, len(nums))
     for i in range(self.box_length):
         for j in range(self.box_length):
@@ -84,7 +84,7 @@ class SudokuGenerator:
             if row >= self.row_length: 
                 return True 
 
-    for num in range(1, self.row_length + 1): # this iterates through each value in the board
+    for num in range(1, self.row_length + 1):
         if self.is_valid(row, col, num):
             self.board[row][col] = num 
             if self.fill_remaining(row, col + 1): 
@@ -103,7 +103,7 @@ class SudokuGenerator:
         self.board[row][col] = 0 
         self.removed_cells -= 1
 
-def generate_sudoku(size, removed): # Creates A sudoku generator and filles the board with values, removes the appropraite number of cells, and returns the board and its solution
+def generate_sudoku(size, removed): # Creates A sudoku generator and filles the board with values, removes the appropriate number of cells, and returns the board and its solution
     sudoku = SudokuGenerator(size, removed) 
     sudoku.fill_values() 
     board = sudoku.get_board() 
