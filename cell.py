@@ -1,15 +1,19 @@
 import pygame
 
-
+# NOTE: CLASS STILL DOES NOT SUPPORT DRAWING SKETCHED VALUES, MUST BE ADDED
 class Cell:
-    def __init__(self, value, row, col, screen):
+    def __init__(self, value, row, col, screen, editable):
         self.value = value
         self.row = row
         self.col = col
         self.screen = screen
-        self.sketched_value = 0
         self.selected = False
+        self.sketched_value = None
+        self.editable = editable
         # Constructor for the Cell class
+
+    def selection(self, state):
+        self.selected = state
 
     def set_cell_value(self, value):
         self.value = value
@@ -39,5 +43,5 @@ class Cell:
             4
         )
         if self.value != 0:  # If this cell has a nonzero value, that value is displayed. # Otherwise, no value is displayed in the cell.
-            cell_number = pygame.font.SysFont("Arial", 30).render(str(self.sketched_value), True, (0, 0, 0))  # Creates the number text object that will be displayed
+            cell_number = pygame.font.SysFont("Arial", 30).render(str(self.value), True, (0, 0, 0))  # Creates the number text object that will be displayed
             self.screen.blit(cell_number, ((left + right / 2), (top + bottom / 2)))  # Actually displays said number
