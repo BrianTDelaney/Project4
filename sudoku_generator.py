@@ -92,10 +92,6 @@ def generate_sudoku(size, removed): # Creates A sudoku generator and filles the 
     sudoku = SudokuGenerator(size, removed) # this initates the sudoku generator
     sudoku.fill_values() # this calls fill_values to add values to the sudoku board
     board = sudoku.get_board() # this prints out the given board
-    for row in board:
-        print(row)
     sudoku.remove_cells() # this removes the specified number of cells from the board
     board = sudoku.get_board() # this prints the new board
     return board
-
-generate_sudoku(9, 30)
