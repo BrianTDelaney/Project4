@@ -20,13 +20,15 @@ class Board:
     def set_board(self, board):
         for row in board:
             for space in row:
-                board[board.index(row)][row.index(space)] = Cell(
+                new_cell = Cell(
                     space,
                     board.index(row),
                     row.index(space),
                     self.screen,
                     space == 0
                 )
+                new_cell.set_board_dimensions(self.width, self.height)
+                board[board.index(row)][row.index(space)] = new_cell
         self.board = board
         # Loops iterate through every space in the board and assign it with a Cell object,
         # the last parameter determining whether or not the space is originally blank and therefore editable.
@@ -53,7 +55,6 @@ class Board:
             )
         # First two for loops generate the bold border and 3x3 dividers iterating through thirds of the screen for
         # position.
-
         for row in self.board:  # Iterates through rows and cells of board and draws each cell
             for cell in row:
                 cell.draw()
