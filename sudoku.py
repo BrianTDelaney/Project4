@@ -238,6 +238,8 @@ def main():
                 # if the player fills the board then it is checked whether they have won or lost
                 if board.check_board():
                     draw_game_win(screen)
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        sys.exit()
                 else:
                     draw_game_over(screen)
 
