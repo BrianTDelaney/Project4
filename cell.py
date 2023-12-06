@@ -34,8 +34,12 @@ class Cell:
         # grabs the size of the screen the cell is to be printed on
         left = (width / 9) * self.col
         top = (height / 9) * self.row
-        right = (width / 9) * (self.col + 1)
-        bottom = (height / 9) * (self.row + 1)
+        # right = (width / 9) * (self.col + 1)
+        # bottom = (height / 9) * (self.row + 1)
+        box_width = width / 9
+        box_height = height / 9
+        print(self.row, self.col)
+        print(left, top, box_width, box_height)
         # based on the size of the screen, calculates the sides of the cell
         if self.selected:
             outline_color = (255, 0, 0)
@@ -45,9 +49,9 @@ class Cell:
         pygame.draw.rect(
             self.screen,
             outline_color,
-            (left, top, right, bottom),
+            (left, top, box_width, box_height),
             2
         )
         if self.value != 0:  # If this cell has a nonzero value, that value is displayed. # Otherwise, no value is displayed in the cell.
             cell_number = pygame.font.SysFont("Arial", 30).render(str(self.value), True, (0, 0, 0))  # Creates the number text object that will be displayed
-            self.screen.blit(cell_number, (((left + right) / 2), ((top + bottom) / 2)))  # Actually displays said number
+            self.screen.blit(cell_number, (left + (box_width / 2), top + (box_height / 2)))   # Actually displays said number

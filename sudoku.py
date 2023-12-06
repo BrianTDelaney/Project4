@@ -1,5 +1,6 @@
 import pygame, sys
 from sudoku_generator import SudokuGenerator
+from sudoku_generator import generate_sudoku
 from cell import Cell
 from board import Board
 
@@ -8,7 +9,7 @@ BG_COLOR = (255, 255, 255)
 LINE_COLOR = (0, 0, 0)
 diff = 0
 def draw_game_start(screen):
-    WIDTH, HEIGHT = 800, 600
+    WIDTH, HEIGHT = 600, 800
 
     # title font
     start_title_font = pygame.font.SysFont(None, 80)
@@ -109,7 +110,8 @@ def draw_game_win(screen):
 if __name__ == '__main__':
     game_over = False
     pygame.init()
-    WIDTH, HEIGHT = 800, 600
+    WIDTH, HEIGHT = 600, 800
+    BOARD_WIDTH, BOARD_HEIGHT = 600, 600
     # set width/height of window, initialize screen
     screen = pygame.display.set_mode(size=(WIDTH, HEIGHT))
 
@@ -124,15 +126,17 @@ if __name__ == '__main__':
 
     # make board
     if diff == 1:
-        board = Board(WIDTH, HEIGHT, screen, "easy")
-        sudoku = SudokuGenerator(30)
+        board = Board(BOARD_WIDTH, BOARD_HEIGHT, screen, "easy")
+        sudoku = generate_sudoku(9, 30)
+        board.set_board(sudoku)
     elif diff == 2:
-        board = Board(WIDTH, HEIGHT, screen, "medium")
-        sudoku = SudokuGenerator(40)
+        board = Board(BOARD_WIDTH, BOARD_HEIGHT, screen, "medium")
+        sudoku = generate_sudoku(9, 40)
+        board.set_board(sudoku)
     elif diff == 3:
-        board = Board(WIDTH, HEIGHT, screen, "hard")
-        sudoku = SudokuGenerator(50)
-
+        board = Board(BOARD_WIDTH, BOARD_HEIGHT, screen, "hard")
+        sudoku = generate_sudoku(9, 50)
+        board.set_board(sudoku)
     # draw board
     board.draw()
 
@@ -188,6 +192,8 @@ if __name__ == '__main__':
                 else:
                     # get mouse position
                     x, y = pygame.mouse.get_pos()
-                    clicked_row, clicked_col = y // cell_size, x // cell_size
+                    clicked_row, clicked_col = board.click(x, y)
+                    board.select(clicked_row, clicked_col)
+                    board.draw()
 
         pygame.display.update()

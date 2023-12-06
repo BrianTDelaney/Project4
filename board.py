@@ -68,6 +68,7 @@ class Board:
                 self.selected_cell.selection(False)  # If a cell is already assigned as selected
             self.selected_cell = self.board[row][col]  # Sets the clicked on cell as the selected cell
             self.selected_cell.selection(True)  # Sets selection attribute of selected cell as True
+            self.selected_cell.draw()
         # Marks the cell at (row, col)
         # in the board as the current selected cell.
         # Once a cell has been selected,
@@ -75,8 +76,9 @@ class Board:
 
     def click(self, x, y):
         if x in range(0, self.width + 1) and y in range(0, self.height + 1):  # Checks that the click is within the board
-            click_col = x // (self.width / 9)
-            click_row = y // (self.height / 9)
+            click_col = int(x // (self.width / 9))
+            click_row = int(y // (self.height / 9))
+            print(click_row, click_col)
             return click_row, click_col  # Returns the amount of rows down and amount of columns over that click is
         else:
             return None  # If click is outside the board then nothing is done to the board object.
