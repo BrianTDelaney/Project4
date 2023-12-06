@@ -5,14 +5,15 @@ from cell import Cell
 from board import Board
 
 
-BG_COLOR = (255, 255, 255)
-LINE_COLOR = (0, 0, 0)
+BG_COLOR = (0, 33, 165)
+LINE_COLOR = (250, 70, 22)
 diff = 0
 def draw_game_start(screen):
     WIDTH, HEIGHT = 600, 800
 
     # title font
     start_title_font = pygame.font.SysFont(None, 80)
+    sub_title_font = pygame.font.Font(None, 65)
     button_font = pygame.font.Font(None, 50)
 
     # Background
@@ -22,7 +23,12 @@ def draw_game_start(screen):
     # draw title
     title_surface = start_title_font.render('Welcome to Sudoku', 0, LINE_COLOR)
     title_box = title_surface.get_rect(
-        center=(WIDTH // 2, HEIGHT // 2 - 150))
+        center=(WIDTH // 2, HEIGHT // 2 - 180))
+    screen.blit(title_surface, title_box)
+
+    title_surface = sub_title_font.render("Select Game Mode:", 0, LINE_COLOR)
+    title_box = title_surface.get_rect(
+        center = (WIDTH // 2, HEIGHT // 2 - 50))
     screen.blit(title_surface, title_box)
 
     # initialize difficulty buttons
@@ -43,11 +49,11 @@ def draw_game_start(screen):
 
     # initialize difficulty buttons' rectangles
     easy_rectangle = easy_surface.get_rect(
-        center=(WIDTH // 2 - 200, HEIGHT // 2))
+        center=(WIDTH // 2 - 200, HEIGHT // 2 + 100))
     medium_rectangle = medium_surface.get_rect(
-        center=((WIDTH // 2), HEIGHT // 2))
+        center=((WIDTH // 2), HEIGHT // 2 + 100))
     hard_rectangle = hard_surface.get_rect(
-        center=((WIDTH // 2) + 200, HEIGHT // 2))
+        center=((WIDTH // 2) + 200, HEIGHT // 2 + 100))
 
     # draw buttons
     screen.blit(easy_surface, easy_rectangle)
@@ -56,6 +62,8 @@ def draw_game_start(screen):
 
     while True:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if easy_rectangle.collidepoint(event.pos):
                     global diff
@@ -87,6 +95,7 @@ def draw_game_over(screen):
     restart_rectangle = restart_surface.get_rect(
         center=(WIDTH // 2, HEIGHT // 2 + 150))
     screen.blit(restart_surface, restart_rectangle)
+
 
 def draw_game_win(screen):
     WIDTH, HEIGHT = screen.get_size()
@@ -144,12 +153,6 @@ if __name__ == '__main__':
     board.draw()
 
 
-
-
-
-
-
-
     # reset, restart, exit buttons
     button_font = pygame.font.Font(None, 30)
     reset_text = button_font.render("RESET", 0, (255, 255, 255))
@@ -181,6 +184,8 @@ if __name__ == '__main__':
 
     while True:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # reset button clicked
                 if reset_rectangle.collidepoint(event.pos):
@@ -189,7 +194,7 @@ if __name__ == '__main__':
                 # restart button clicked
                 elif restart_rectangle.collidepoint(event.pos):
                     draw_game_start(screen)
-                    break
+                    board.draw()
                 # exit button clicked
                 elif exit_rectangle.collidepoint(event.pos):
                     sys.exit()
@@ -213,6 +218,5 @@ if __name__ == '__main__':
                     draw_game_win(screen)
                 else:
                     draw_game_over(screen)
-
 
         pygame.display.update()
