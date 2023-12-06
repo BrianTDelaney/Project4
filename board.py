@@ -111,8 +111,7 @@ class Board:
                 if not cell.original and cell.value != 0:
                     cell.set_cell_value(0)
                     cell.editable = True
-        # Reset all cells in the board to their original values
-        # (0 if cleared, otherwise the corresponding digit).
+        # Reset all cells in the board to their original values and makes them editable again.
 
     def is_full(self):
         # Iterates through every cell in the board checking to see if any have a value of 0, meaning they are empty.
