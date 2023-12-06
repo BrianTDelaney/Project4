@@ -96,6 +96,8 @@ def draw_game_over(screen):
     restart_rectangle = restart_surface.get_rect(
         center=(WIDTH // 2, HEIGHT // 2 + 150))
     screen.blit(restart_surface, restart_rectangle)
+    return restart_rectangle
+    # Returns button for use in main()
 
 
 def draw_game_win(screen):
@@ -116,6 +118,8 @@ def draw_game_win(screen):
     exit_rectangle = exit_surface.get_rect(
         center=(WIDTH // 2, HEIGHT // 2 + 150))
     screen.blit(exit_surface, exit_rectangle)
+    return exit_rectangle
+    # Returns button for use in main()
 
 
 def main():
@@ -208,6 +212,7 @@ def main():
                         # selects cell at row and column of mouse click
                         board.draw()
                 if event.type == pygame.KEYDOWN:
+                    keys_pressed = []
                     # checks that the button pressed is a number
                     if event.key in range(49, 58) and board.selected_cell is not None:
                         board.selected_cell.set_sketched_value(event.key - 48)
@@ -228,23 +233,39 @@ def main():
                                 board.select(4, board.next_selectable('right'))
                         else:
                             if event.key == 1073741903:
+                                # Right arrow key pressed
                                 board.select(board.selected_cell.row, board.next_selectable('right'))
+                                # Selects the next selectable square to the right
                             elif event.key == 1073741904:
+                                # Left arrow key pressed
                                 board.select(board.selected_cell.row, board.next_selectable('left'))
+                                # Selects the next selectable square to the left
                             elif event.key == 1073741905:
+                                # Down arrow key pressed
                                 board.select(board.next_selectable('down'), board.selected_cell.col)
+                                # Selects the next selectable square downwards
                             elif event.key == 1073741906:
+                                # Up arrow key pressed
                                 board.select(board.next_selectable('up'), board.selected_cell.col)
+                                # Selects the next selectable square upwards
                             board.draw()
 
                 if board.is_full():
                     # if the player fills the board then it is checked whether they have won or lost
                     if board.check_board():
-                        draw_game_win(screen)
+                        end = draw_game_win(screen)
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            sys.exit()
+                            if end.collidepoint(event.pos):
+                                sys.exit()
+                    # Exits game
+
                     else:
-                        draw_game_over(screen)
+                        restart = draw_game_over(screen)
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            if restart.collidepoint(event.pos):
+                                main_game = False
+                    # Breaks input detection loop and restarts game.
+
 
             pygame.display.update()
             # updates screen with any visual changes
