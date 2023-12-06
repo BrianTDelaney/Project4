@@ -111,10 +111,8 @@ class SudokuGenerator:
 def generate_sudoku(size, removed): # GIven the number of rows and number of cells to remove, this function creates a SudokuGenerator, fills its values, removes the appropriate number of cells, and returns the representative 2D lists of the board and solution
     sudoku = SudokuGenerator(size, removed) # this creates a sudoku generator board
     sudoku.fill_values() #this fills the board with random values
-    board = sudoku.get_board() # this returns an incomplete board
-    sudoku.print_board()
+    key = str(sudoku.get_board()) # this returns an incomplete board
+    print(key)
     sudoku.remove_cells() # this designates any empty cells to be 0
     board = sudoku.get_board() # this returns the solved version of the board
-    return board
-
-generate_sudoku(9, 30)
+    return key, board

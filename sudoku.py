@@ -75,7 +75,7 @@ def draw_game_over(screen):
     game_over_font = pygame.font.Font(None, 60)
     screen.fill(BG_COLOR)
     game_over_surface = game_over_font.render("Game Over!", 0, LINE_COLOR)
-    game_over_rect = game_over_surface.get.rect(
+    game_over_rect = game_over_surface.get_rect(
         center=(WIDTH // 2, HEIGHT // 2 - 100))
     screen.blit(game_over_surface, game_over_rect)
     # restart button
@@ -127,15 +127,18 @@ if __name__ == '__main__':
     # make board
     if diff == 1:
         board = Board(BOARD_WIDTH, BOARD_HEIGHT, screen, "easy")
-        sudoku = generate_sudoku(9, 30)
+        key, sudoku = generate_sudoku(9, 30)
+        board.set_key(key)
         board.set_board(sudoku)
     elif diff == 2:
         board = Board(BOARD_WIDTH, BOARD_HEIGHT, screen, "medium")
-        sudoku = generate_sudoku(9, 40)
+        key, sudoku = generate_sudoku(9, 40)
+        board.set_key(key)
         board.set_board(sudoku)
     elif diff == 3:
         board = Board(BOARD_WIDTH, BOARD_HEIGHT, screen, "hard")
-        sudoku = generate_sudoku(9, 50)
+        key, sudoku = generate_sudoku(9, 50)
+        board.set_key(key)
         board.set_board(sudoku)
     # draw board
     board.draw()
@@ -182,6 +185,7 @@ if __name__ == '__main__':
                 # reset button clicked
                 if reset_rectangle.collidepoint(event.pos):
                     board.reset_to_original()
+                    board.draw()
                 # restart button clicked
                 elif restart_rectangle.collidepoint(event.pos):
                     draw_game_start(screen)
@@ -195,5 +199,20 @@ if __name__ == '__main__':
                     clicked_row, clicked_col = board.click(x, y)
                     board.select(clicked_row, clicked_col)
                     board.draw()
+            if event.type == pygame.KEYDOWN:
+                if event.key in range(49, 58) and board.selected_cell is not None:
+                    board.selected_cell.set_sketched_value(event.key - 48)
+                    board.draw()
+                if event.key == 13 and board.selected_cell is not None:
+                    if board.selected_cell.sketched_value is not None:
+                        board.selected_cell.set_cell_value(board.selected_cell.sketched_value)
+                        board.selected_cell.set_sketched_value(None)
+                        board.draw()
+            if board.is_full():
+                if board.check_board():
+                    draw_game_win(screen)
+                else:
+                    draw_game_over(screen)
+
 
         pygame.display.update()

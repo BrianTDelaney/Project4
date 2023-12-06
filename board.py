@@ -4,7 +4,7 @@ from cell import Cell
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
-        self.width = width
+        self.width = width - 4
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
@@ -37,12 +37,15 @@ class Board:
         self.key = key
 
     def draw(self):
+        for row in self.board:  # Iterates through rows and cells of board and draws each cell
+            for cell in row:
+                cell.draw()
         for i in range(0, 4):
             pygame.draw.line(
                 self.screen,
                 (0, 0, 0),
-                (0, i * (self.height / 3)),
-                (self.width, i * (self.height / 3)),
+                (0, i * (self.height/ 3)),
+                (self.width + 8, i * (self.height/ 3)),
                 8
             )
         for i in range(0, 4):
@@ -53,11 +56,8 @@ class Board:
                 (i * (self.width / 3), self.height),
                 8
             )
-        # First two for loops generate the bold border and 3x3 dividers iterating through thirds of the screen for
+        # Last two for loops generate the bold border and 3x3 dividers iterating through thirds of the screen for
         # position.
-        for row in self.board:  # Iterates through rows and cells of board and draws each cell
-            for cell in row:
-                cell.draw()
         # Draws an outline of the Sudoku grid,
         # with bold lines to delineate the 3x3 boxes.
         # Draws every cell on this board.
@@ -78,7 +78,6 @@ class Board:
         if x in range(0, self.width + 1) and y in range(0, self.height + 1):  # Checks that the click is within the board
             click_col = int(x // (self.width / 9))
             click_row = int(y // (self.height / 9))
-            print(click_row, click_col)
             return click_row, click_col  # Returns the amount of rows down and amount of columns over that click is
         else:
             return None  # If click is outside the board then nothing is done to the board object.
@@ -115,14 +114,14 @@ class Board:
         is_full = True
         for row in self.board:
             for cell in row:
-                if cell == 0:
+                if cell.value == 0:
                     is_full = False
         return is_full
         # Returns a Boolean value indicating whether the board is full
         # or not.
 
     def update_board(self):
-        self.current_answer = [[cell.value for cell in row] for row in self.board]
+        self.current_answer = str([[cell.value for cell in row] for row in self.board])
     # Sets the current answer equal to a new array of all VALUES of cells in the board.
 
     def find_empty(self):
