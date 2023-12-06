@@ -1,13 +1,14 @@
-import pygame, sys
-from sudoku_generator import SudokuGenerator
+import pygame
+import sys
 from sudoku_generator import generate_sudoku
-from cell import Cell
 from board import Board
 
 
 BG_COLOR = (0, 33, 165)
 LINE_COLOR = (250, 70, 22)
 diff = 0
+
+
 def draw_game_start(screen):
     WIDTH, HEIGHT = 600, 800
 
@@ -19,7 +20,6 @@ def draw_game_start(screen):
     # Background
     screen.fill(BG_COLOR)
 
-
     # draw title
     title_surface = start_title_font.render('Welcome to Sudoku', 0, LINE_COLOR)
     title_box = title_surface.get_rect(
@@ -28,7 +28,7 @@ def draw_game_start(screen):
 
     title_surface = sub_title_font.render("Select Game Mode:", 0, LINE_COLOR)
     title_box = title_surface.get_rect(
-        center = (WIDTH // 2, HEIGHT // 2 - 50))
+        center=(WIDTH // 2, HEIGHT // 2 - 50))
     screen.blit(title_surface, title_box)
 
     # initialize difficulty buttons
@@ -77,6 +77,7 @@ def draw_game_start(screen):
                     return
             pygame.display.update()
 
+
 def draw_game_over(screen):
     WIDTH, HEIGHT = screen.get_size()
     # game over text
@@ -116,9 +117,10 @@ def draw_game_win(screen):
         center=(WIDTH // 2, HEIGHT // 2 + 150))
     screen.blit(exit_surface, exit_rectangle)
 
-if __name__ == '__main__':
-    game_over = False
+
+def main():
     pygame.init()
+    game_over = False
     WIDTH, HEIGHT = 600, 800
     BOARD_WIDTH, BOARD_HEIGHT = 600, 600
     # set width/height of window, initialize screen
@@ -151,7 +153,6 @@ if __name__ == '__main__':
         board.set_board(sudoku)
     # draw board
     board.draw()
-
 
     # reset, restart, exit buttons
     button_font = pygame.font.Font(None, 30)
@@ -202,21 +203,47 @@ if __name__ == '__main__':
                     # get mouse position
                     x, y = pygame.mouse.get_pos()
                     clicked_row, clicked_col = board.click(x, y)
+                    # get row and column of mouse position
                     board.select(clicked_row, clicked_col)
+                    # selects cell at row and column of mouse click
                     board.draw()
             if event.type == pygame.KEYDOWN:
+                # checks that the button pressed is a number
                 if event.key in range(49, 58) and board.selected_cell is not None:
                     board.selected_cell.set_sketched_value(event.key - 48)
+                    # sets selected cell's sketched value to that of the button pressed
                     board.draw()
+                # checks that a cell is selected and the enter button was pressed
                 if event.key == 13 and board.selected_cell is not None:
                     if board.selected_cell.sketched_value is not None:
                         board.selected_cell.set_cell_value(board.selected_cell.sketched_value)
                         board.selected_cell.set_sketched_value(None)
+                        # sets the selected cell's value equal to the sketched value and clears the sketched value
                         board.draw()
+                if event.key in range(1073741903, 1073741907):
+                    if board.selected_cell is None:
+                        pass
+                    else:
+                        if event.key == 1073741903:
+                            board.select(board.selected_cell.row, board.next_selectable('right'))
+                        elif event.key == 1073741904:
+                            board.select(board.selected_cell.row, board.next_selectable('left'))
+                        elif event.key == 1073741905:
+                            board.select(board.next_selectable('down'), board.selected_cell.col)
+                        elif event.key == 1073741906:
+                            board.select(board.next_selectable('up'), board.selected_cell.col)
+                        board.draw()
+
             if board.is_full():
+                # if the player fills the board then it is checked whether they have won or lost
                 if board.check_board():
                     draw_game_win(screen)
                 else:
                     draw_game_over(screen)
 
         pygame.display.update()
+        # updates screen with any visual changes
+
+
+if __name__ == '__main__':
+    main()

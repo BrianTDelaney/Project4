@@ -1,17 +1,18 @@
 import pygame
 
-# NOTE: CLASS STILL DOES NOT SUPPORT DRAWING SKETCHED VALUES, MUST BE ADDED
+
 class Cell:
-    def __init__(self, value, row, col, screen, editable):
-        self.value = value
+    def __init__(self, value, row, col, screen, editable, original):
+        self.value = value  # Permanent value put in after the user hits enter on a sketched in cell
         self.row = row
         self.col = col
         self.screen = screen
-        self.selected = False
-        self.sketched_value = None
-        self.editable = editable
+        self.selected = False  # Whether the cell is currently selected or not
+        self.sketched_value = None  # Temporary value input by the user
+        self.editable = editable  # Whether the cell can be changed or not
         self.board_width = None
         self.board_height = None
+        self.original = original  # Whether the cell is filled in or blank at the start
         # Constructor for the Cell class
 
     def selection(self, state):
@@ -22,6 +23,7 @@ class Cell:
         self.board_height = height
 
     def set_cell_value(self, value):
+        self.editable = False
         self.value = value
         # Setter for this cell's value
 
@@ -57,7 +59,14 @@ class Cell:
         )
         if self.sketched_value is not None:
             cell_number = pygame.font.SysFont("Arial", 20).render(str(self.sketched_value), True, (105, 105, 105))
-            self.screen.blit(cell_number, (left + (box_width / 8), top  + (box_height / 10)))
-        if self.value != 0:  # If this cell has a nonzero value, that value is displayed. # Otherwise, no value is displayed in the cell.
-            cell_number = pygame.font.SysFont("Arial", 30).render(str(self.value), True, (0, 0, 0))  # Creates the number text object that will be displayed
-            self.screen.blit(cell_number, (left + (box_width / 2) - 5, top + (box_height / 4)))   # Actually displays said number
+            self.screen.blit(cell_number, (left + (box_width / 8), top + (box_height / 10)))
+        if self.value != 0:
+            # If this cell has a nonzero value, that value is displayed. # Otherwise, no value is displayed in the cell.
+            num_color = (0, 0, 0)
+            if self.original:
+                num_color = (0, 0, 128)
+            # If the cell is not empty at the start then the number color will be navy blue, otherwise it will be black
+            cell_number = pygame.font.SysFont("Arial", 30).render(str(self.value), True, num_color)
+            # Creates the number text object that will be displayed
+            self.screen.blit(cell_number, (left + (box_width / 2) - 5, top + (box_height / 4)))
+            # Actually displays said number

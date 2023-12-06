@@ -4,7 +4,7 @@ from cell import Cell
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
-        self.width = width - 4
+        self.width = width
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
@@ -25,7 +25,8 @@ class Board:
                     board.index(row),
                     row.index(space),
                     self.screen,
-                    space == 0
+                    space == 0,
+                    space != 0
                 )
                 new_cell.set_board_dimensions(self.width, self.height)
                 board[board.index(row)][row.index(space)] = new_cell
@@ -44,8 +45,8 @@ class Board:
             pygame.draw.line(
                 self.screen,
                 (0, 0, 0),
-                (0, i * (self.height/ 3)),
-                (self.width + 8, i * (self.height/ 3)),
+                (0, i * (self.height / 3)),
+                (self.width, i * (self.height / 3)),
                 8
             )
         for i in range(0, 4):
@@ -75,7 +76,8 @@ class Board:
         # the user can edit its value or sketched value.
 
     def click(self, x, y):
-        if x in range(0, self.width + 1) and y in range(0, self.height + 1):  # Checks that the click is within the board
+        if x in range(0, self.width + 1) and y in range(0, self.height + 1):
+            # Checks that the click is within the board
             click_col = int(x // (self.width / 9))
             click_row = int(y // (self.height / 9))
             return click_row, click_col  # Returns the amount of rows down and amount of columns over that click is
@@ -102,7 +104,8 @@ class Board:
         # Sets the value of the current selected cell equal to user
         # entered value. Called when the user presses the Enter key.
 
-    def reset_to_original(self):  # Iterates through every cell in the board and sets the value to 0 of all editable cells
+    def reset_to_original(self):
+        # Iterates through every cell in the board and sets the value to 0 of all editable cells
         for row in self.board:
             for cell in row:
                 if cell.editable:
@@ -110,7 +113,8 @@ class Board:
         # Reset all cells in the board to their original values
         # (0 if cleared, otherwise the corresponding digit).
 
-    def is_full(self): # Iterates through every cell in the board checking to see if any have a value of 0, meaning they are empty.
+    def is_full(self):
+        # Iterates through every cell in the board checking to see if any have a value of 0, meaning they are empty.
         is_full = True
         for row in self.board:
             for cell in row:
@@ -139,3 +143,29 @@ class Board:
         else:
             return False
         # Checks whether the Sudoku board is solved correctly, aka whether the current answer matches the key.
+
+    def next_selectable(self, direction):
+        # Function iterates through the cells stretching out in whatever direction arrow key has been pressed from the
+        # selected cell and returns the row or column the first cell that is editable. If an editable cell cannot be
+        # found in that direction it just returns the row or column of the cell that is already selected.
+        cell = self.selected_cell
+        if direction == 'right':
+            for i in range(1, 9 - cell.col):
+                if self.board[cell.row][cell.col + i].editable:
+                    return cell.col + i
+            return cell.col
+        if direction == 'left':
+            for i in range(1, cell.col + 1):
+                if self.board[cell.row][cell.col - i].editable:
+                    return cell.col - i
+            return cell.col
+        if direction == 'down':
+            for i in range(1, 9 - cell.row):
+                if self.board[cell.row + i][cell.col].editable:
+                    return cell.row + i
+            return cell.row
+        if direction == 'up':
+            for i in range(1, cell.row + 1):
+                if self.board[cell.row - i][cell.col].editable:
+                    return cell.row - i
+            return cell.row
