@@ -108,8 +108,9 @@ class Board:
         # Iterates through every cell in the board and sets the value to 0 of all non-generated cells
         for row in self.board:
             for cell in row:
-                if not cell.original:
+                if not cell.original and cell.value != 0:
                     cell.set_cell_value(0)
+                    cell.editable = True
         # Reset all cells in the board to their original values
         # (0 if cleared, otherwise the corresponding digit).
 
