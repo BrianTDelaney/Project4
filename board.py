@@ -105,10 +105,10 @@ class Board:
         # entered value. Called when the user presses the Enter key.
 
     def reset_to_original(self):
-        # Iterates through every cell in the board and sets the value to 0 of all editable cells
+        # Iterates through every cell in the board and sets the value to 0 of all non-generated cells
         for row in self.board:
             for cell in row:
-                if cell.editable:
+                if not cell.original:
                     cell.set_cell_value(0)
         # Reset all cells in the board to their original values
         # (0 if cleared, otherwise the corresponding digit).
